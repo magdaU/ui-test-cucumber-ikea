@@ -1,8 +1,8 @@
 # UI Test Cucumber IKEA
 
-Projekt testów automatycznych UI dla strony [ikea.com/dk/da](https://www.ikea.com/dk/da/), oparty na Spring Boot, Selenium i Cucumber (BDD).
+Automated UI test project for [ikea.com/dk/da](https://www.ikea.com/dk/da/), built with Spring Boot, Selenium and Cucumber (BDD).
 
-## Stack technologiczny
+## Tech stack
 
 - **Java 21**
 - **Spring Boot 4.1.0**
@@ -10,32 +10,32 @@ Projekt testów automatycznych UI dla strony [ikea.com/dk/da](https://www.ikea.c
 - **Cucumber 7** + JUnit Platform Suite (Cucumber-JVM)
 - **AssertJ**
 
-## Struktura projektu
+## Project structure
 
 ```
-src/main/java/...UiTestCucumberIkeaApplication.java   - klasa startowa Spring Boot
-src/test/resources/features/ikea_homepage.feature     - scenariusze testowe (Gherkin)
-src/test/java/...steps/IkeaHomepageSteps.java          - kroki Cucumber (Selenium)
-src/test/java/...RunCucumberTest.java                  - runner Cucumber (JUnit Platform Suite)
-src/test/java/...CucumberSpringConfiguration.java      - integracja Cucumber + Spring
+src/main/java/...UiTestCucumberIkeaApplication.java   - Spring Boot application entry point
+src/test/resources/features/ikea_homepage.feature     - test scenarios (Gherkin)
+src/test/java/...steps/IkeaHomepageSteps.java          - Cucumber step definitions (Selenium)
+src/test/java/...RunCucumberTest.java                  - Cucumber runner (JUnit Platform Suite)
+src/test/java/...CucumberSpringConfiguration.java      - Cucumber + Spring integration
 ```
 
-## Scenariusze testowe
+## Test scenarios
 
-Plik `ikea_homepage.feature` zawiera:
+The `ikea_homepage.feature` file contains:
 
-1. **Otwarcie strony głównej IKEA Denmark** – sprawdzenie tytułu strony oraz widoczności bannera zgody na cookies.
-2. **Wyszukiwanie produktu** – wpisanie zapytania ("BILLY") w wyszukiwarkę i weryfikacja, że wyniki zawierają szukaną frazę.
+1. **Open the IKEA Denmark homepage** – checks the page title and the visibility of the cookie consent banner.
+2. **Search for a product** – enters a query ("BILLY") into the search box and verifies that the results contain the searched term.
 
-## Wymagania
+## Requirements
 
 - Java 21 (JDK)
-- Zainstalowana przeglądarka **Google Chrome** (Selenium uruchamia ją w trybie headless)
-- Połączenie z internetem (testy odpytują realną stronę ikea.com)
+- **Google Chrome** installed (Selenium launches it in headless mode)
+- Internet connection (tests run against the live ikea.com site)
 
-Maven nie jest wymagany lokalnie – projekt zawiera Maven Wrapper (`mvnw` / `mvnw.cmd`).
+Maven is not required locally – the project includes the Maven Wrapper (`mvnw` / `mvnw.cmd`).
 
-## Uruchamianie testów
+## Running the tests
 
 ### Windows
 
@@ -49,9 +49,9 @@ mvnw.cmd test
 ./mvnw test
 ```
 
-Testy uruchomią się w przeglądarce Chrome w trybie headless. Wyniki testów (raporty Surefire) znajdą się w katalogu `target/surefire-reports`.
+Tests run in headless Chrome. Test results (Surefire reports) are written to `target/surefire-reports`.
 
-## Uruchamianie aplikacji
+## Running the application
 
 ```bash
 ./mvnw spring-boot:run

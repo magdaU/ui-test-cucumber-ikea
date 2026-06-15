@@ -54,7 +54,7 @@ public class IkeaHomepageSteps {
 
     @Then("search results contain {string}")
     public void searchResultsContain(String expectedText) {
-        // poczekaj aż wyniki się załadują
+        // wait for the search results to load
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.urlContains("search"));
         assertThat(driver.getPageSource()).containsIgnoringCase(expectedText);

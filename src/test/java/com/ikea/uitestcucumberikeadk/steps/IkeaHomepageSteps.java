@@ -7,6 +7,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -58,6 +59,45 @@ public class IkeaHomepageSteps {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.urlContains("search"));
         assertThat(driver.getPageSource()).containsIgnoringCase(expectedText);
+    }
+
+    private static final String LISABO_ASKETRAESFINER_URL = "https://www.ikea.com/dk/da/p/lisabo-bord-asketraesfiner-40416498/";
+    private static final String LISABO_SORT_ASKETRAESFINER_URL = "https://www.ikea.com/dk/da/p/lisabo-bord-sort-asketraesfiner-50416501/";
+
+    @Given("user opens the LISABO table product page in color {string}")
+    public void userOpensTheLisaboTableProductPageInColor(String color) {
+        String url = switch (color) {
+            case "Asketræsfiner" -> LISABO_ASKETRAESFINER_URL;
+            case "Sort/asketræsfiner" -> LISABO_SORT_ASKETRAESFINER_URL;
+            default -> throw new IllegalArgumentException("Unknown LISABO color: " + color);
+        };
+        driver.get(url);
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".pipcom-price__integer")));
+
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(By.id("onetrust-accept-btn-handler")))
+                    .click();
+        } catch (TimeoutException e) {
+            // cookie consent banner did not appear, nothing to dismiss
+        }
+    }
+
+    @When("user sets the quantity to {int}")
+    public void userSetsTheQuantityTo(int quantity) {
+        WebElement quantityInput = driver.findElement(By.cssSelector(".pipf-quantity-stepper__input"));
+        WebElement increaseButton = driver.findElement(By.cssSelector(".pipf-quantity-stepper__increase"));
+        while (Integer.parseInt(quantityInput.getAttribute("value")) < quantity) {
+            increaseButton.click();
+        }
+    }
+
+    @Then("the price is {string}")
+    public void thePriceIs(String expectedPrice) {
+        String integerPart = driver.findElement(By.cssSelector(".pipcom-price__integer")).getText();
+        String decimalPart = driver.findElement(By.cssSelector(".pipcom-price__decimal")).getText();
+        assertThat(integerPart + decimalPart).isEqualTo(expectedPrice);
     }
 
     @After

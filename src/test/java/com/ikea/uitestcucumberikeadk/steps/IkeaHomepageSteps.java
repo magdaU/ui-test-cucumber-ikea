@@ -48,8 +48,14 @@ public class IkeaHomepageSteps {
 
     @When("user types {string} in the search box")
     public void userTypesInSearchBox(String searchTerm) {
+        dismissCookieBannerIfPresent();
+
         WebElement searchInput = driver.findElement(By.id("ikea-search-input"));
         searchInput.sendKeys(searchTerm);
+        // wait for the autocomplete dropdown to open before submitting,
+        // otherwise pressing enter is sometimes swallowed
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(d -> "true".equals(searchInput.getAttribute("aria-expanded")));
         searchInput.sendKeys(Keys.ENTER);
     }
 
@@ -75,13 +81,7 @@ public class IkeaHomepageSteps {
         new WebDriverWait(driver, Duration.ofSeconds(15))
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".pipcom-price__integer")));
 
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(5))
-                    .until(ExpectedConditions.elementToBeClickable(By.id("onetrust-accept-btn-handler")))
-                    .click();
-        } catch (TimeoutException e) {
-            // cookie consent banner did not appear, nothing to dismiss
-        }
+        dismissCookieBannerIfPresent();
     }
 
     @When("user sets the quantity to {int}")
@@ -98,6 +98,16 @@ public class IkeaHomepageSteps {
         String integerPart = driver.findElement(By.cssSelector(".pipcom-price__integer")).getText();
         String decimalPart = driver.findElement(By.cssSelector(".pipcom-price__decimal")).getText();
         assertThat(integerPart + decimalPart).isEqualTo(expectedPrice);
+    }
+
+    private void dismissCookieBannerIfPresent() {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(By.id("onetrust-accept-btn-handler")))
+                    .click();
+        } catch (TimeoutException e) {
+            // cookie consent banner did not appear, nothing to dismiss
+        }
     }
 
     @After

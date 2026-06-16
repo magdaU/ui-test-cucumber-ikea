@@ -1,5 +1,7 @@
 # UI Test Cucumber IKEA
 
+[![UI Tests](https://github.com/magdaU/ui-test-cucumber-ikea/actions/workflows/tests.yml/badge.svg)](https://github.com/magdaU/ui-test-cucumber-ikea/actions/workflows/tests.yml)
+
 Automated UI test project for [ikea.com/dk/da](https://www.ikea.com/dk/da/), built with Spring Boot, Selenium and Cucumber (BDD).
 
 ## Tech stack
@@ -101,6 +103,14 @@ mvnw.cmd allure:serve      # build a temporary report and open it in the browser
 mvnw.cmd allure:report     # write a static report to target/site/allure-maven-plugin
 ```
 
+## CI/CD
+
+GitHub Actions runs the suite on every push and pull request
+(`.github/workflows/tests.yml`): JDK 21 (Temurin), headless Chrome (preinstalled
+on the runner), `./mvnw test`. Flaky live-site scenarios are retried via
+`-Dsurefire.rerunFailingTestsCount=2`. The Allure results and Surefire reports
+are uploaded as build artifacts (`allure-results`, `surefire-reports`).
+
 ## Roadmap — "PRO STANDARD" checklist
 
 What makes this an industry-level framework, and where we are:
@@ -113,7 +123,7 @@ What makes this an industry-level framework, and where we are:
 | 4 | Explicit waits | ✅ done |
 | 5 | Config system | 🟡 partial — constants in `utils/Config`, not externalised to properties/env |
 | 6 | Reporting (Allure) | ✅ done |
-| 7 | CI/CD | ⬜ todo |
+| 7 | CI/CD | ✅ done |
 | 8 | Screenshot on failure | ⬜ todo |
 
 ## Running the application

@@ -12,10 +12,32 @@ Automated UI test project for [ikea.com/dk/da](https://www.ikea.com/dk/da/), bui
 
 ## Project structure
 
+The test code is organised in four layers:
+
+```
+🔵 Feature layer (Cucumber)      - test description in Gherkin
+src/test/resources/features/*.feature
+
+🟡 Step Definitions              - translate Gherkin -> Java, hold assertions
+src/test/java/...steps/Hooks.java                - browser lifecycle (@Before/@After)
+src/test/java/...steps/HomepageSteps.java
+src/test/java/...steps/LisaboTableSteps.java
+
+🟢 Page Objects (POM)            - Selenium logic per page
+src/test/java/...pages/BasePage.java             - shared driver/wait + cookie banner
+src/test/java/...pages/HomePage.java
+src/test/java/...pages/LisaboTablePage.java
+
+⚙️ Utils                         - driver, wait, config
+src/test/java/...utils/DriverManager.java        - WebDriver lifecycle (ThreadLocal)
+src/test/java/...utils/WaitHelper.java           - WebDriverWait wrappers
+src/test/java/...utils/Config.java               - base URL and timeouts
+```
+
+Plus the supporting wiring:
+
 ```
 src/main/java/...UiTestCucumberIkeaApplication.java   - Spring Boot application entry point
-src/test/resources/features/ikea_homepage.feature     - test scenarios (Gherkin)
-src/test/java/...steps/IkeaHomepageSteps.java          - Cucumber step definitions (Selenium)
 src/test/java/...RunCucumberTest.java                  - Cucumber runner (JUnit Platform Suite)
 src/test/java/...CucumberSpringConfiguration.java      - Cucumber + Spring integration
 ```
